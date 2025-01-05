@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { AuthenticatedNavbar } from '../../components/AuthenticatedNavbar'
 import { Button } from "../../components/ui/button"
-import { Input } from "../../components/ui/input"
+// import { Input } from "../../components/ui/input"
 import { Label } from "../../components/ui/label"
 import { Card, CardHeader, CardTitle, CardContent } from "../../components/ui/card"
 import { Switch } from "../../components/ui/switch"
@@ -16,7 +16,6 @@ export default function SettingsPage() {
         language: 'english',
         timezone: 'UTC',
     })
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         // Here you would typically send the updated settings to your backend
