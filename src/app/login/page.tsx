@@ -1,8 +1,9 @@
-import {Navbar} from '../../components/Navbar'
-import {Button} from "../../components/ui/button"
-import {Input} from "../../components/ui/input"
-import {Label} from "../../components/ui/label"
+import {Navbar} from '@/components/Navbar'
+import {Button} from "@/components/ui/button"
+import {Input} from "@/components/ui/input"
+import {Label} from "@/components/ui/label"
 import {Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter} from "../../components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
 import {Link} from "react-router";
 import {useRef, useState, useEffect} from "react";
 import {useNavigate, useLocation} from "react-router-dom";
@@ -23,7 +24,7 @@ interface DecodedAccessToken {
 
 export default function LoginPage() {
     // @ts-ignore
-    const {setAuth} = useAuth()
+    const {setAuth, persist, setPersist} = useAuth()
     const userRef = useRef<HTMLInputElement | null>(null);
     const errRef = useRef<HTMLParagraphElement | null>(null);
 
@@ -32,7 +33,7 @@ export default function LoginPage() {
     const [errMsg, setErrMsg] = useState('')
     const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
+    const from = location.state?.from?.pathname || "/dashboard";
 
     useEffect(() => {
         // @ts-ignore
@@ -87,6 +88,14 @@ export default function LoginPage() {
 
     }
 
+    const togglePersist = () => {
+        setPersist((prev: any) => !prev);
+    }
+
+    useEffect(() => {
+        localStorage.setItem("legalLens_persist", persist);
+    }, [persist]);
+
     return (
         <section>
             <p ref={errRef} className={errMsg ? "errmsg" :
@@ -124,6 +133,19 @@ export default function LoginPage() {
                                         onChange={(e) => setPwd(e.target.value)}
                                         value={pwd}
                                     />
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id="trustDevice"
+                                        checked={persist}
+                                        onCheckedChange={togglePersist}
+                                    />
+                                    <Label
+                                        htmlFor="trustDevice"
+                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    >
+                                        Trust this device
+                                    </Label>
                                 </div>
                                 <Button type="submit" className="w-full">Log in</Button>
                             </form>
