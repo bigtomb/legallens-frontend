@@ -22,6 +22,10 @@ export default function SignupPage() {
     const [validName, setValidName] = useState(false);
     const [nameFocus, setNameFocus] = useState(false);
 
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+
+
     const [email, setEmail] = useState("");
     const [validEmail, setValidEmail] = useState(false);
     const [emailFocus, setEmailFocus] = useState(false);
@@ -46,7 +50,7 @@ export default function SignupPage() {
     }, [])
 
     useEffect(() => {
-        setValidName(USER_REGEX.test(name));
+        setValidName(USER_REGEX.test(firstName));
     }, [name])
 
 
@@ -66,7 +70,9 @@ export default function SignupPage() {
         try {
             const response = await axios.post(REGISTER_URL,
                 {
-                    username: name,
+                    username: email.split('@')[0],
+                    first_name: firstName,
+                    last_name: lastName,
                     email: email,
                     password: pwd,
                 }, {
@@ -107,17 +113,31 @@ export default function SignupPage() {
                             <CardContent>
                                 <form onSubmit={handleSubmit} className="space-y-4">
                                     <div className="space-y-2">
-                                        <Label htmlFor="name">Full Name</Label>
+                                        <Label htmlFor="firstName">First Name</Label>
                                         <Input
+                                            id="firstName"
+                                            name="firstName"
                                             type="text"
-                                            id="username"
-                                            placeholder="John Doe"
+                                            placeholder="John"
                                             ref={userRef}
-                                            autoComplete="off"
-                                            onChange={(e) => setName(e.target.value)}
-                                            value={name}
                                             required
-                                            aria-invalid={validName ? "false" : "true"}
+                                            value={firstName}
+                                            onChange={(e) => setFirstName(e.target.value)}
+                                            aria-describedby="uidnote"
+                                            onFocus={() => setNameFocus(true)}
+                                            onBlur={() => setNameFocus(false)}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="lastName">Last Name</Label>
+                                        <Input
+                                            id="lastName"
+                                            name="lastName"
+                                            type="text"
+                                            placeholder="Doe"
+                                            required
+                                            value={lastName}
+                                            onChange={(e) => setLastName(e.target.value)}
                                             aria-describedby="uidnote"
                                             onFocus={() => setNameFocus(true)}
                                             onBlur={() => setNameFocus(false)}
@@ -171,7 +191,7 @@ export default function SignupPage() {
                                     <Button
                                         type="submit"
                                         className="w-full"
-                                        disabled={!name || !email || !pwd || !matchPwd}
+                                        disabled={!firstName || !lastName || !email || !pwd || !matchPwd}
                                     >Sign up</Button>
                                 </form>
                             </CardContent>

@@ -13,6 +13,7 @@ import MyCasesPage from "./app/cases/cases.tsx";
 import LegalResearchDashboard from "./app/research/research.tsx";
 import DocumentAnalysisPage from "./app/analysis/analysis.tsx";
 import UnauthorizedPage from "./app/unauthorized/unauthorized.tsx";
+import AdminDashboard from "./app/admin/dashboard/page.tsx";
 
 
 
@@ -31,6 +32,10 @@ function App() {
                     <Route path="cases" element={<MyCasesPage/>}/>
                     <Route path="research" element={<LegalResearchDashboard/>}/>
                     <Route path="analysis" element={<DocumentAnalysisPage/>}/>
+                </Route>
+
+                <Route element={<RequireAuth allowedRoles={["ADMIN"]}/>}>
+                    <Route path="admin/dashboard" element={<AdminDashboard/>}/>
                 </Route>
                 <Route path="/unauthorized" element={<UnauthorizedPage/>}/>
             </Route>

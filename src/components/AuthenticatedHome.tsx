@@ -44,14 +44,24 @@ export function AuthenticatedHome() {
     formData.append("document", file);
     // Simulate file upload and processing
     try {
-      const response = await axiosPrivate.post(UPLOAD_URL, formData
+      const uploadResponse = await axiosPrivate.post(UPLOAD_URL, formData
           , {
             headers: {'content-type': 'multipart/form-data'},
             withCredentials: true
           }
       );
-      analysis = response.data;
-      console.log(analysis)
+      analysis = uploadResponse.data;
+      const storeResponse = await axiosPrivate.post("api/store-analysis/",
+          {
+            document_name: file?.name || "Untitled",
+            analysis: analysis
+          }
+          , {
+            headers: {'content-type': "application/json"},
+            withCredentials: true
+          }
+      );
+      console.log(storeResponse)
     } catch (err) {
       console.log(err)
     }

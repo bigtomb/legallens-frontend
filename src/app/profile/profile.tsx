@@ -7,14 +7,18 @@ import { Input } from "../../components/ui/input"
 import { Label } from "../../components/ui/label"
 import { Card, CardHeader, CardTitle, CardContent } from "../../components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
+import useAuth  from "../../hooks/useAuth.ts";
 
 export default function ProfilePage() {
+    // @ts-ignore
+    const {auth} = useAuth()
+    // @ts-ignore
     const [user, setUser] = useState({
-        name: 'John Doe',
-        email: 'john.doe@example.com',
+        name: auth.first_name + " " + auth.last_name,
+        email: auth.email,
         avatar: '/placeholder.svg?height=100&width=100',
-        role: 'Attorney',
-        company: 'Legal Eagles LLP',
+        role: auth.firstName || "",
+        company: auth.company || "",
     })
 
     const handleSubmit = (e: React.FormEvent) => {

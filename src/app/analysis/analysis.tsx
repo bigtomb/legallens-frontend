@@ -12,6 +12,7 @@ import { FileText, Download, Share2 } from 'lucide-react'
 
 
 
+
 interface AnalysisResult {
     summary: string;
     keyPoints: string[];
@@ -38,6 +39,7 @@ export default function DocumentAnalysisPage() {
 
 
 
+    // @ts-ignore
     useEffect(() => {
         // Simulating fetching document information
         setDocument({
@@ -45,6 +47,8 @@ export default function DocumentAnalysisPage() {
             name: file.name,
             uploadDate: 'June 20, 2023'
         })
+
+
 
         // Simulating analysis progress
         const timer = setInterval(() => {

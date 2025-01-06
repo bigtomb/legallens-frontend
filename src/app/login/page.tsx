@@ -51,9 +51,13 @@ export default function LoginPage() {
 
             const accessToken = response?.data?.access;
             const decodedAccessToken = jwtDecode(accessToken);
+            const first_name = decodedAccessToken.first_name;
+            const last_name = decodedAccessToken.last_name;
             const role = decodedAccessToken.role;
+            const company = decodedAccessToken.company;
+            const title = decodedAccessToken.title;
 
-            setAuth({email, role, accessToken});
+            setAuth({email,first_name,last_name, role, company, title, accessToken});
             setEmail("");
             setPwd("");
             navigate(from, {replace: true});
