@@ -17,7 +17,7 @@ export default function ProfilePage() {
         name: auth.first_name + " " + auth.last_name,
         email: auth.email,
         avatar: '/placeholder.svg?height=100&width=100',
-        role: auth.firstName || "",
+        role: auth.role || "",
         company: auth.company || "",
     })
 
