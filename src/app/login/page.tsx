@@ -4,7 +4,7 @@ import {Input} from "../../components/ui/input"
 import {Label} from "../../components/ui/label"
 import {Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter} from "../../components/ui/card"
 import {Link} from "react-router";
-import {useRef, useState, useEffect, useContext} from "react";
+import {useRef, useState, useEffect} from "react";
 import {useNavigate, useLocation} from "react-router-dom";
 // @ts-ignore
 import axios from "../../api/axios"
@@ -13,12 +13,19 @@ import useAuth  from "../../hooks/useAuth.ts";
 
 const LOGIN_URL = "/auth/login/"
 
+interface DecodedAccessToken {
+    first_name: string;
+    last_name: string;
+    role: string;
+    company: string;
+    title: string;
+}
 
 export default function LoginPage() {
     // @ts-ignore
     const {setAuth} = useAuth()
-    const userRef = useRef()
-    const errRef = useRef()
+    const userRef = useRef<HTMLInputElement | null>(null);
+    const errRef = useRef<HTMLParagraphElement | null>(null);
 
     const [email, setEmail] = useState('')
     const [pwd, setPwd] = useState('')
@@ -36,7 +43,7 @@ export default function LoginPage() {
         setErrMsg('');
     }, [email, pwd]);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
 
 
@@ -50,7 +57,7 @@ export default function LoginPage() {
             );
 
             const accessToken = response?.data?.access;
-            const decodedAccessToken = jwtDecode(accessToken);
+            const decodedAccessToken = jwtDecode<DecodedAccessToken>(accessToken);
             const first_name = decodedAccessToken.first_name;
             const last_name = decodedAccessToken.last_name;
             const role = decodedAccessToken.role;
@@ -62,10 +69,9 @@ export default function LoginPage() {
             setPwd("");
             navigate(from, {replace: true});
 
-        } catch (err)
+        } catch (err: any)
         {
-            // @ts-ignore
-            if (!err?.response) {
+            if (err) {
                 setErrMsg("No Server Response")
             } else if (err.response?.status === 400) {
                 setErrMsg("Missing Email or Password")

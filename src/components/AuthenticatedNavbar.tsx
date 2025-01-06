@@ -23,6 +23,7 @@ import useAuth from "../hooks/useAuth.ts";
 
 export function AuthenticatedNavbar() {
   const location = useLocation()
+  // @ts-ignore
   const {auth} = useAuth()
 
   const navItems = [
@@ -54,7 +55,7 @@ export function AuthenticatedNavbar() {
                         key={item.to}
                         to={item.to}
                         className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                            location === item.to
+                            location.pathname === item.to
                                 ? 'border-blue-500 text-gray-900'
                                 : 'border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
                         }`}
@@ -115,7 +116,7 @@ export function AuthenticatedNavbar() {
                           <Link
                               to={item.to}
                               className={`flex items-center space-x-2 px-4 py-3 text-sm transition-colors ${
-                                  location === item.to
+                                  location.pathname === item.to
                                       ? 'bg-blue-50 text-blue-700'
                                       : 'text-gray-700 hover:bg-gray-100'
                               }`}

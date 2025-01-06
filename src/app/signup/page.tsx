@@ -1,5 +1,6 @@
 import {Link} from 'react-router'
-import {useRef, useState, useEffect} from "react";
+import {useRef, useState, useEffect, FormEvent} from "react";
+// @ts-ignore
 import axios from "../../api/axios"
 import {Navbar} from '../../components/Navbar'
 import {Button} from "../../components/ui/button"
@@ -14,34 +15,33 @@ const REGISTER_URL = '/auth/register/';
 
 
 export default function SignupPage() {
-    const userRef = useRef();
-    const errRef = useRef();
+    const userRef = useRef<HTMLInputElement | null>(null);
+    const errRef = useRef<HTMLParagraphElement | null>(null);
     const navigate = useNavigate();
 
-    const [name, setName] = useState("");
-    const [validName, setValidName] = useState(false);
-    const [nameFocus, setNameFocus] = useState(false);
+    const [name] = useState("");
+    const [, setValidName] = useState(false);
+    const [, setNameFocus] = useState(false);
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
 
 
     const [email, setEmail] = useState("");
-    const [validEmail, setValidEmail] = useState(false);
-    const [emailFocus, setEmailFocus] = useState(false);
+    const [validEmail] = useState(false);
+    const [, setEmailFocus] = useState(false);
 
     const [pwd, setPwd] = useState("");
-    const [validPwd, setValidPwd] = useState(false);
-    const [pwdFocus, setPwdFocus] = useState(false);
+    const [validPwd] = useState(false);
+    const [, setPwdFocus] = useState(false);
 
     const [matchPwd, setMatchPwd] = useState("");
 
-    const [validMatch, setValidMatch] = useState(false);
-    const [matchFocus, setMatchFocus] = useState(false);
+    const [validMatch] = useState(false);
+    const [, setMatchFocus] = useState(false);
 
 
-    const [errMsg, seterrMsg] = useState("");
-    const [success, setSuccess] = useState(false);
+    const [errMsg, setErrMsg] = useState("");
 
 
     useEffect(() => {
@@ -55,20 +55,20 @@ export default function SignupPage() {
 
 
     useEffect(() => {
-        const result = PWD_REGEX.test(pwd)
+        PWD_REGEX.test(pwd);
         const match = pwd == matchPwd;
         setValidName(match);
     }, [pwd, matchPwd])
 
     useEffect(() => {
-        seterrMsg("");
+        setErrMsg("");
     }, [name, pwd, matchPwd])
 
-    const handleSubmit = async (e: React.MouseEvent) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
-            const response = await axios.post(REGISTER_URL,
+            await axios.post(REGISTER_URL,
                 {
                     username: email.split('@')[0],
                     first_name: firstName,
@@ -81,13 +81,13 @@ export default function SignupPage() {
                 }
             );
             navigate("/login");
-        } catch (err) {
+        } catch (err: any) {
             if (!err?.response) {
-                seterrMsg("Np Server Response")
+                setErrMsg("No Server Response")
             } else if (err.response.status === 409) {
-                seterrMsg("Username Taken")
+                setErrMsg("Username Taken")
             } else {
-                seterrMsg("Registration Failed")
+                setErrMsg("Registration Failed")
             }
             // @ts-ignore
             errRef.current.focus();
@@ -111,7 +111,8 @@ export default function SignupPage() {
                                     started</CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <form onSubmit={handleSubmit} className="space-y-4">
+                                <form onSubmit={handleSubmit}
+                                      className="space-y-4">
                                     <div className="space-y-2">
                                         <Label htmlFor="firstName">First Name</Label>
                                         <Input
