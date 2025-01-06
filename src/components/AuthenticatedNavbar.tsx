@@ -1,5 +1,5 @@
 'use client'
-import {Link, useLocation} from "react-router"
+import {Link, useLocation, useNavigate} from "react-router"
 import { MicroscopeIcon as MagnifyingGlassIcon, UserCircle, Search, BookOpen, LogOut, Shield, Settings, Menu, Home, FileText } from 'lucide-react'
 import {
   DropdownMenu,
@@ -20,14 +20,22 @@ import {
 } from "./ui/sheet"
 import { Separator } from "./ui/separator"
 import useAuth from "../hooks/useAuth.ts";
+import useLogout from "@/hooks/useLogout.ts";
 
 export function AuthenticatedNavbar() {
   const location = useLocation()
   // @ts-ignore
   const {auth} = useAuth()
+  const logout = useLogout()
+  const navigate = useNavigate()
+
+  const signOut = async () => {
+    await logout()
+    navigate("/")
+  }
 
   const navItems = [
-    { to: '/', label: 'Dashboard', icon: Home },
+    { to: '/dashboard', label: 'Dashboard', icon: Home },
     { to: '/research', label: 'Research', icon: Search },
     { to: '/cases', label: 'My Cases', icon: FileText },
   ]
@@ -91,7 +99,7 @@ export function AuthenticatedNavbar() {
                   ))}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
-                    <button className="flex w-full items-center text-red-600" onClick={() => console.log('Logout clicked')}>
+                    <button className="flex w-full items-center text-red-600" onClick={signOut}>
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Log out</span>
                     </button>
@@ -142,7 +150,7 @@ export function AuthenticatedNavbar() {
                     <SheetClose asChild>
                       <button
                           className="flex items-center space-x-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors w-full text-left"
-                          onClick={() => console.log('Logout clicked')}
+                          onClick={signOut}
                       >
                         <LogOut className="h-5 w-5" />
                         <span>Log out</span>
